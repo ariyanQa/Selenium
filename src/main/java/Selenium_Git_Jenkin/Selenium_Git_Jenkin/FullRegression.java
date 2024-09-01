@@ -49,6 +49,7 @@ public class FullRegression {
 
        driver.findElement(By.xpath("//input[@aria-label='Edit location']")).sendKeys("Bengaluru,Karnataka");
        driver.findElement(By.xpath("//button[text()='Find jobs']")).click();
+       System.out.println("Debasis test");
        //.click(); 
        //sleep(20);
     }

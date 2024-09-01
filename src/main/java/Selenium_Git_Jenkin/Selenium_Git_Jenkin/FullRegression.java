@@ -38,7 +38,7 @@ public class FullRegression {
    @BeforeSuite
    public void setupReport() {
    	extent = new ExtentReports();
-   	ExtentSparkReporter spark = new ExtentSparkReporter(ws+"\\target\\HtmilReport.html");
+   	ExtentSparkReporter spark = new ExtentSparkReporter(ws+"\\reports\\HtmilReport.html");
    	extent.attachReporter(spark);
    }
     @BeforeTest

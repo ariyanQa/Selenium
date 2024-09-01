@@ -11,29 +11,48 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class FullRegression {
 	WebDriver driver = null;
+	static ExtentTest test;
+	static ExtentReports extent;
+	String ws = System. getProperty("user.dir");
     public WebDriverWait getWait() {
         return wait;
     }
 
    WebDriverWait wait;
-
+   
+   @BeforeSuite
+   public void setupReport() {
+   	extent = new ExtentReports();
+   	ExtentSparkReporter spark = new ExtentSparkReporter(ws+"\\target\\HtmilReport.html");
+   	extent.attachReporter(spark);
+   }
     @BeforeTest
     public void setup()  {
+    	test = extent.createTest("Class");
         WebDriverManager.chromedriver().setup();
         //System.setProperty("webdriver.chrome.driver","C:\\Users\\lenovo\\eclipse-workspace\\Pratice\\Selenium\\src\\main\\resources\\chromedriver.exe");
         driver = new ChromeDriver(getChromeOptions());
+        test.log(Status.INFO, "browser launched");
         wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         driver.get("https://in.indeed.com/");
         driver.manage().window().maximize();
         System.out.println("Before class Setup"+ driver.getTitle());
+        test.log(Status.PASS, "Application title fetched");
 
     }
     @Test
@@ -49,7 +68,7 @@ public class FullRegression {
 
        driver.findElement(By.xpath("//input[@aria-label='Edit location']")).sendKeys("Bengaluru,Karnataka");
        driver.findElement(By.xpath("//button[text()='Find jobs']")).click();
-       System.out.println("Debasis test");
+       test.log(Status.PASS, "Debasis");
        //.click(); 
        //sleep(20);
     }
@@ -67,6 +86,11 @@ public class FullRegression {
     public void tearDown(){
         driver.close();
         System.out.println("After class teardown");
+    }
+    
+    @AfterSuite
+    public void tearreport() {
+    	extent.flush();
     }
     public void sleep(int timeinsec){
         try{
